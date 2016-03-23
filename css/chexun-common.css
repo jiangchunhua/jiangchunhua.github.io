@@ -4,14 +4,14 @@ body,div,h1,h2,h3,h4,h5,h6,p,ul,ol,li,dl,dd,dt,span,a,b,em,i,strong,img{ padding
 li{ list-style:none;}
 a{ text-decoration:none; color:#555;}
 textarea{ resize:none; }
-input,select,textarea{ outline:none;}
+input,select,textarea{ outline:none; }
 img{ border:0;}
-img,input,select,textarea{ vertical-align:top;}
+img,input,select,textarea{ vertical-align:top; }
 
 .fl{ float:left; display:inline;}
 .fr{ float:right; display:inline;}
 .clearFix:after{ content:''; display:block; clear:both;}
 .clearFix{ zoom:1;}
 
-body{ font-size:12px; font-family:"微软雅黑"; color:#666; background:url(../images/bg11.jpg) repeat-y;}
-.wrapper{ width:1120px; margin:0 auto; position:relative;}
+body{ font-size:12px; font-family:"微软雅黑"; color:#666;}
+.wrapper{ width:960px; margin:0 auto; }

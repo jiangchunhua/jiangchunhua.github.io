@@ -1,0 +1,71 @@
+@charset "utf-8";
+/* CSS Document */
+/* nav */
+.nav{ width:1115px; margin:0 auto; overflow:hidden; position:relative; z-index:999999;}
+.nav ul{ width:1116px; position:fixed; z-index:10; margin-right:-1px;}
+.nav li{ float:left; width:185px; height:50px; line-height:50px; background:#666; font-size:20px; text-align:center; border-right:1px solid #fff; overflow:hidden; position:relative;}
+.nav li.active{ background:#7E07E4;}
+.nav li.bg_shadow{ position:absolute; background:#226CA2; left:0; top:0; z-index:3; border-right:none;}
+.nav li a{ color:#fff; z-index:5; position:relative;}
+/* banner */
+.banner_box{ width:800px; height:550px; position:relative; margin:0 auto 80px; padding-top:50px;}
+.banner { width:800px; height:450px; position:relative; margin:50px auto 0; overflow:hidden;}
+.banner .banner_pic{ position:absolute; left:0; top:0;}
+.banner .banner_pic li{ width:800px; height:450px; float:left; position:relative; left:0;}
+.banner .banner_pic img{ width:800px; height:450px;}
+.slt_btn{ width:800px; height:100px; margin:0 auto; position:absolute; left:0; bottom:0;}
+.slt_btn li{ width:160px; height:100px; position:relative; float:left;}
+.slt_btn li img{ width:160px; height:100px;}
+.slt_btn li .shadow{ width:160px; height:100px; position:absolute; left:0; top:0; background:#000; opacity:0.7; filter:alpha(opacity=70);}
+.slt_btn .border{ width:150px; height:90px; border:5px solid #fff; position:absolute; left:0; top:0;}
+.img_text{ width:800px; height:50px; position:absolute; left:0; bottom:100px; }
+.img_text div{ width:100%; height:100%; background:#777; opacity:0.5; position:absolute; left:0; top:0;}
+.img_text p{ color:#000; font-size:16px; padding:10px; position:relative;}
+/* card */
+.card { width:850px; margin:0 auto 80px; overflow:hidden; padding-top:10px; height:550px;}
+.card ul{ position:relative; left:5px; width:1000px;}
+.card li{ width:270px; height:460px; background:#EB9697; border-radius:5px; float:left; margin-right:16px; position:relative; left:0; top:0}
+.card li.show{ box-shadow:5px 5px 5px #000;}
+.card li img{ width:270px; height:220px; border-radius:5px 5px 0 0;}
+.card li div{ border-top:5px solid #e55151; height:190px;}
+.card li h3{ font-size:20px; color:#fff; text-align:center; margin:20px 0;}
+.card li p{ margin:0 20px; font-size:14px;}
+.card li a{ display:block; width:50px; height:30px; text-align:center; line-height:30px; background:#fff; color:#222; margin:0 auto; border-radius:3px;}
+.card li a.active{ background:pink; color:#fff;}
+.card .guide{ width:842px; height:20px; background:#767A78; border-radius:20px; margin:40px auto; position:relative;}
+.guide .bar{ width:100px; height:20px; background:#1E1F19; position:absolute; left:0; top:0; border-radius:20px; cursor:pointer;}
+/* kinds */
+.kinds {width:940px; height:500px; border:1px solid black; margin:0px auto 80px; position:relative; overflow:hidden;}
+.kinds span {width:20px; height:500px; display:block; position:absolute; left:0; top:0; text-align:center; color:#000; opacity:0.5; filter:alpha(opacity=50);}
+.kinds div {width:840px; height:500px; position:absolute; left:0; top:0; background:#CCC;}
+.kinds img{ width:840px; height:500px;}
+/* drag */
+.drag{ height:450px; margin:0px auto 80px; position:relative; overflow:hidden;}
+.drag ul{ position:absolute;left:0;top:135px;}
+.drag ul li{ float:left; position:relative;width:260px;height:179px;}
+.drag ul li img{ width:260px;height:179px; position:absolute;left:0;top:0;}
+.drag ul li span{ font-size:30px;color:#000; background:#fff; position:absolute;left:48%;top:48%;}
+/* big */
+.big{ width:496px; height:496px; overflow:hidden; margin:0 auto 80px; position:relative;}
+.big ul{ width:520px;}
+.big li{ width:150px; height:150px; border:1px solid #fff; float:left; margin:0 20px 20px 0; cursor:pointer;}
+.big li img{ width:150px; height:150px;}
+.big div{ width:0px; height:0px; position:absolute; left:50%; top:50%; overflow:hidden;}
+.big div img{ width:500px; height:400px;}
+.big div span{ position:absolute; top:0; right:0; width:30px; height:30px; line-height:30px; text-align:center; font-size:300%; cursor:pointer;}
+.big div span.active{ background:#fff;}
+/* random */
+.random li{ width:100px; height:100px; border-radius:50%; border:1px solid #fff; position:fixed; background:url(../images/sbj.jpg) no-repeat; opacity:0; filter:alpha(opacity=0);}
+.random li.a{ left:10px; top:100px; background-position:-43px -122px;}
+.random li.b{ left:70px; top:300px; background-position:-124px -60px;}
+.random li.c{ left:30px; top:500px; background-position:-43px -122px;}
+.random li.d{ right:10px; top:100px; background-position:-124px -60px;}
+.random li.e{ right:70px; top:300px;background-position:-43px -122px;}
+.random li.f{ right:30px; top:500px; background-position:-124px -60px;}
+
+.close_footprint{ width:50px; height:30px; background:#fff; position:fixed; right:0; bottom:0; text-align:center; line-height:30px; border-radius:5px;}
+
+
+
+
+

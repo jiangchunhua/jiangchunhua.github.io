@@ -1,195 +1,176 @@
-  <!doctype html>
+<!doctype html>
 <html>
 <head>
 <meta charset="utf-8">
-<title>MyWeb</title>
-<link href="css/common.css" rel="stylesheet" />
-<link href="css/index.css" rel="stylesheet" />
+<title>my_web</title>
+<style>
+*{ margin:0; padding:0; list-style:none;}
+body{ background:url(images/bg.jpg) no-repeat; font-family:"微软雅黑"}
+.box{ width:940px;/* overflow:hidden;*/ position:relative; top:50%; margin-top:110px; left:50%; margin-left:-470px;}
+.box ul{ width:960px; position:absolute; left:0}
+.box li{ width:300px; height:200px; background:#fff; margin:0 20px 20px 0; float:left; opacity:0; filter:alpha(opacity=0); border-radius:10px; position:relative; overflow:hidden; }
+.box li span{ position:absolute; left:0px; top:200px; width:100%; height:50%; background:rgba(195,201,204,1.00); border-radius:10px;}
+.box li div{ width:100%; height:100%; position:absolute; left:0; top:200px; background:#8CC2E5; border-radius:10px;}
+.box li a{ position:absolute; left:-0px; top:-100px; width:100%; height:50%; color:#000; text-align:center; line-height:100px; font-size:200%; cursor:pointer; text-decoration:none;}
+.box li p{ text-align:center; color:#fff; margin-top:30px;}
+.box li i{ text-align:center; color:#fff; font-style:normal; text-align:center; display:block;}
+</style>
 <script src="js/move.js"></script>
-<script src="js/index.js" type="text/javascript"></script>
+
+<script>
+window.onload=function(){
+	var oBox=document.getElementById('box');
+	var aLi=oBox.children[0].children;
+	var aLiPos=[];
+	var ready=true;
+	for(var i=0;i<aLi.length;i++){
+		aLiPos.push({left:aLi[i].offsetLeft,top:aLi[i].offsetTop});
+		aLi[i].style.left=aLiPos[i].left+'px';
+		aLi[i].style.top=aLiPos[i].top+'px';
+	} 
+	for(var i=0;i<aLi.length;i++){
+		aLi[i].style.position="absolute";
+		aLi[i].style.margin=0;
+		aLi[i].index=i;
+	}
+	for(var i=0;i<aLi.length;i++){
+		aLi[i].style.left=aLiPos[0].left+'px';
+		aLi[i].style.top=aLiPos[0].top+'px';
+	}
+	setTimeout(function(){
+		for(var i=0;i<aLi.length;i++){
+			move(aLi[i],{opacity:1});
+		}
+		var n=0;
+		var timer=setInterval(function(){
+			if(n<=2){
+				move(aLi[n],aLiPos[n],{fn:function(){
+					if(n>2){
+						aLi[3].style.left=aLi[4].style.left=aLi[5].style.left=aLiPos[2].left+'px';
+						aLi[3].style.top=aLi[4].style.top=aLi[5].style.top=aLiPos[2].top+'px';
+					}
+				}});
+			}else if(n==3){
+				
+				move(aLi[3],aLiPos[5],{fn:function(){
+					aLi[4].style.left=aLi[5].style.left=aLiPos[5].left+'px';
+					aLi[4].style.top=aLi[5].style.top=aLiPos[5].top+'px';				
+				}});
+			}else if(n==4){
+				move(aLi[4],aLiPos[4],{fn:function(){
+					aLi[5].style.left=aLiPos[4].left+'px';
+					aLi[5].style.top=aLiPos[4].top+'px';	
+				}});
+			}else if(n==5){
+				move(aLi[n],aLiPos[3],{fn:function(){
+					change();
+				}});
+			}
+			n++;
+			if(n==aLi.length){
+				clearInterval(timer);
+			}
+		},600)
+	},300);
+	function change(){
+		for(var i=0;i<aLi.length;i++){
+			(function(index){
+				move(aLi[index],{opacity:0.7},{fn:function(){
+					move(aLi[index].children[0],{top:100});
+					move(aLi[index].children[1],{top:0})
+				}});
+			})(i)
+			shake();
+		}
+	}
+	function shake(){
+		var n=0;
+		var tmpP=null;
+		var tmpDiv=null;
+		var _this=null;
+		for(var i=0;i<aLi.length;i++){
+			aLi[i].onmouseover=function(ev){
+				var oEvt=ev||event;
+				var oFrom=oEvt.fromElement||oEvt.relatedTarget;
+				if(this.contains(oFrom)) return;
+				_this=this;
+				tmpP=this.children[1];
+				tmpDiv=this.children[2];
+				clearInterval(this.timer);
+				this.timer=setInterval(function(){
+					n++;
+					if(n%2==0){
+						move(tmpP,{top:-10});
+					}else{
+						move(tmpP,{top:10});
+					}
+				},100)
+				move(tmpDiv,{top:100})			
+				setTimeout(function(){
+					move(tmpP,{top:0});
+					clearInterval(_this.timer);
+				},500)
+			}
+			aLi[i].onmouseout=function(ev){
+				var oEvt=ev||event;
+				var oTo=oEvt.toElement||oEvt.relatedTarget;
+				if(this.contains(oTo)) return;
+				clearInterval(_this.timer);
+				move(tmpP,{top:0});		
+				move(tmpDiv,{top:200})
+			};
+		}			
+	}
+};
+</script>
 </head>
 
 <body>
-<section class="wrapper">
-	<div class="nav" id="nav">
-        <ul class="clearFix">
-            <li>
-                <a href="#banner">首页</a>
-            </li>
-            <li>
-                <a href="#card">首页</a>
-            </li>
-            <li>
-                <a href="#kinds">首页</a>
-            </li>
-            <li>
-                <a href="javascript:;">首页</a>
-            </li>
-            <li>
-                <a href="javascript:;">首页</a>
-            </li>
-            <li>
-                <a href="javascript:;">首页</a>
-            </li>
-            <li class="bg_shadow"></li>
-        </ul>
-    </div>
-    <!--banner-->    
-	<div>
-        <div class="banner" id="banner">
-            <ul class="banner_pic">
-                <li><img src="images/hashiqi.jpg" alt="" /></li>
-                <li><img src="images/labuladuo.jpg" alt="" /></li>
-                <li><img src="images/zangao.jpg" alt="" /></li>
-                <li><img src="images/taidi.jpg" alt="" /></li>
-                <li><img src="images/demu.jpg" alt="" /></li>
-            </ul>
-        </div>
-        <div class="slt_btn" id="slt_btn">
-        	<ul>
-                <li>
-                    <img src="images/hashiqi.jpg" alt="" />
-                    <div class=""></div>
-                </li>
-                <li>
-                    <img src="images/labuladuo.jpg" alt="" />
-                    <div class="shadow"></div>
-                </li>
-                <li>
-                    <img src="images/zangao.jpg" alt="" />
-                    <div class="shadow"></div>
-                </li>
-                <li>
-                    <img src="images/taidi.jpg" alt="" />
-                    <div class="shadow"></div>
-                </li>
-                <li>
-                    <img src="images/demu.jpg" alt="" />
-                    <div class="shadow"></div>
-                </li>
-            </ul>
-            <div class="border"></div>
-        </div>
-        <div class="img_text" id="img_text">
-            <p>拉布拉多</p>
-        </div>
-    </div>
-    <!--card-->
-    <div class="card" id="card">
-    	<h2>为您推荐</h2>
-    	<ul class="clearFix">
-        	<li>
-            	<img src="images/guibing.jpg" alt="" />
-                <div>
-                	<h3>贵宾</h3>
-                	<p>贵宾犬，Poodle，也称“贵妇犬”，又称“卷毛狗”。贵宾犬以水中捕猎而著称，是水猎犬。它是聪明而善解人。贵宾犬气质独特，造型多变，赢得了许多人的欢心，给人一种漂亮的、聪明的印象。</p>
-                </div>
-                <a href="#">更多</a>
-            </li>
-        	<li>
-            	<img src="images/gumu.jpg" alt="" />
-                <div>
-                	<h3>贵宾</h3>
-                	<p>贵宾犬，Poodle，也称“贵妇犬”，又称“卷毛狗”。贵宾犬以水中捕猎而著称，是水猎犬。它是聪明而善解人。贵宾犬气质独特，造型多变，赢得了许多人的欢心，给人一种漂亮的、聪明的印象。</p>
-                </div>
-                <a href="#">更多</a>
-            </li>
-        	<li>
-            	<img src="images/jinmao.jpg" alt="" />
-                <div>
-                	<h3>贵宾</h3>
-                	<p>贵宾犬，Poodle，也称“贵妇犬”，又称“卷毛狗”。贵宾犬以水中捕猎而著称，是水猎犬。它是聪明而善解人。贵宾犬气质独特，造型多变，赢得了许多人的欢心，给人一种漂亮的、聪明的印象。</p>
-                </div>
-                <a href="#">更多</a>
-            </li>
-        	<li>
-            	<img src="images/alasijia.jpg" alt="" />
-                <div>
-                	<h3>贵宾</h3>
-                	<p>贵宾犬，Poodle，也称“贵妇犬”，又称“卷毛狗”。贵宾犬以水中捕猎而著称，是水猎犬。它是聪明而善解人。贵宾犬气质独特，造型多变，赢得了许多人的欢心，给人一种漂亮的、聪明的印象。</p>
-                </div>
-                <a href="#">更多</a>
-            </li>
-        	<li>
-            	<img src="images/samo.jpg" alt="" />
-                <div>
-                	<h3>贵宾</h3>
-                	<p>贵宾犬，Poodle，也称“贵妇犬”，又称“卷毛狗”。贵宾犬以水中捕猎而著称，是水猎犬。它是聪明而善解人。贵宾犬气质独特，造型多变，赢得了许多人的欢心，给人一种漂亮的、聪明的印象。</p>
-                </div>
-                <a href="#">更多</a>
-            </li>
-        	<li>
-            	<img src="images/qiutian.jpg" alt="" />
-                <div>
-                	<h3>贵宾</h3>
-                	<p>贵宾犬，Poodle，也称“贵妇犬”，又称“卷毛狗”。贵宾犬以水中捕猎而著称，是水猎犬。它是聪明而善解人。贵宾犬气质独特，造型多变，赢得了许多人的欢心，给人一种漂亮的、聪明的印象。</p>
-                </div>
-                <a href="#">更多</a>
-            </li>
-        	<li>
-            	<img src="images/labuladuo.jpg" alt="" />
-                <div>
-                	<h3>贵宾</h3>
-                	<p>贵宾犬，Poodle，也称“贵妇犬”，又称“卷毛狗”。贵宾犬以水中捕猎而著称，是水猎犬。它是聪明而善解人。贵宾犬气质独特，造型多变，赢得了许多人的欢心，给人一种漂亮的、聪明的印象。</p>
-                </div>
-                <a href="#">更多</a>
-            </li>
-        </ul>
-        <div class="guide" id="guide">
-        	<span class="bar"></span>
-        </div>
-    </div>
-    <!--kinds-->
-    <div class="kinds" id="kinds">
-    	<h2>看看</h2>
-    	<div class="kinds_box">
-        	<ul>
-                <li>
-                    <img src="images/hashiqi.jpg" alt="" />
-                </li>
-                <li>
-                    <img src="images/hashiqi.jpg" alt="" />
-                </li>
-                <li>
-                    <img src="images/hashiqi.jpg" alt="" />
-                </li>
-                <li>
-                    <img src="images/hashiqi.jpg" alt="" />
-                </li>
-                <li>
-                    <img src="images/hashiqi.jpg" alt="" />
-                </li>
-                <li>
-                    <img src="images/hashiqi.jpg" alt="" />
-                </li>
-                <li>
-                    <img src="images/hashiqi.jpg" alt="" />
-                </li>
-                <li>
-                    <img src="images/hashiqi.jpg" alt="" />
-                </li>
-                <li>
-                    <img src="images/hashiqi.jpg" alt="" />
-                </li>
-            </ul>
-        </div>
-        <a href="javascript:;" class="left">Prev</a>
-        <a href="javascript:;" class="right">Next</a>        
-    </div>
-</section>
-<section class="side" id="side">
-	<div class="side_left">
-    	<ul>
-        	<li class="a"></li>
-        	<li class="b"></li>
-        	<li class="c"></li>
-        	<li class="d"></li>
-        	<li class="e"></li>
-        	<li class="f"></li>
-        </ul>
-        <span>展开</span>
-    </div>
-    <div class="side_right">返回首页</div>
-</section>
+<div class="box" id="box">
+	<ul>
+    	<li>
+        	<span></span>
+            <a href="xuangxiangka.html">选项卡</a>
+            <div>
+            	<p>一些常见的选项卡</p>
+            </div>
+        </li>
+    	<li>
+        	<span></span>
+            <a href="yundong.html">运动</a>
+            <div>
+            	<p>一些高级运动</p>
+            </div>
+        </li>
+    	<li>
+        	<span></span>
+            <a href="chexunwang.html">以往作品</a>
+            <div>
+            	<p>自己临摹过的静态页面</p>
+            </div>
+        </li>
+    	<li>
+        	<span></span>
+            <a href="#">HTML5+CSS3</a>
+            <div>
+            	<p>H5和C3的特效</p>
+            </div>
+        </li>
+    	<li>
+        	<span></span>
+            <a href="#">关于我</a>
+            <div>
+            	<i>关注新技术，对于前端开发有浓厚兴趣。抗压能力强，有责任心，能适应适量的加班。有良好的团队合作精神及学习能力，乐于分享。</i>
+            </div>
+        </li>
+    	<li>
+        	<span></span>
+            <a href="#">联系我</a>
+            <div>
+            	<p>电话:18512137486</br>邮箱:mujujch@126.com</p>
+            </div>
+        </li>
+    </ul>
+</div>
 </body>
 </html>

@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="author" content="智能社 - zhinengshe.com" />
+<meta name="copyright" content="智能社 - zhinengshe.com" />
+<title>智能社 - www.zhinengshe.com</title>
+<style>
+*{ margin:0; padding:0; list-style:none; font-family: "微软雅黑","张海山锐线体简"}
+#div1{width:500px;height:500px;/* border: #000 solid 1px;*/ border-radius:50%; position:absolute;left:50%;top:50%; margin-top:-250px; margin-left:-250px;}
+.sBox{width:100px;height:100px;background:red; position:absolute;left:0;top:0;margin-left:-50px;margin-top:-50px;}
+.center{ position:absolute; left:50%; top:50%; background:red; width:0px; height:0px; }
+</style>
+<script src="js/move.js"></script>
+<script>
+window.onload=function(){
+	var oDiv=document.getElementById('div1');
+	var oBtn=document.getElementById('btn1');
+	var count=6;
+	var bl=true;
+	var oCenter=document.createElement('div');
+	var aBox=null;
+	oCenter.className='center';
+	document.body.appendChild(oCenter);
+	move(oCenter,{width:100,height:100,marginLeft:-50,marginTop:-50},{time:1000, fn:function(){
+		move(oCenter,{top:80},{fn:function(){
+			oCenter.style.display='none';
+			createBox();
+			var n=0;
+			aBox=document.getElementsByClassName('sBox');
+			var timer=setInterval(function(){
+				remove(n);
+				n++;
+				if(n==aBox.length){
+					clearInterval(timer);
+				}
+			},500)
+		}})
+	}})
+	function createBox(){
+		for(var i=0;i<count;i++){
+			var oBox=document.createElement('div');
+			oBox.className='sBox';
+			document.body.appendChild(oBox);
+			setPos(oBox,0);
+			oBox.rotate=0;
+		}
+	}
+	function move2(obj,iTarget){
+		var start=obj.rotate;
+		var dis=iTarget-start;
+		var count=Math.round(700/30);
+		var n=0;
+		clearInterval(obj.timer);
+		obj.timer=setInterval(function(){
+			n++;
+			var a=1-n/count;
+			var cur=start+dis*(1-a*a*a);
+			setPos(obj,cur);
+			obj.rotate=cur;
+			if(n==count){
+				clearInterval(obj.timer);	
+			}
+		},30);
+	}	
+	function remove(i){
+		move2(aBox[i],i*(300/(count-1)));
+	};
+	function setPos(obj,ang){
+		var a=Math.sin(a2r(ang))*oDiv.offsetWidth/2;
+		var b=Math.cos(a2r(ang))*oDiv.offsetHeight/2;
+		obj.style.left=oDiv.offsetLeft+oDiv.offsetWidth/2+a+'px';
+		obj.style.top=oDiv.offsetTop+oDiv.offsetHeight/2-b+'px';	
+	}
+	function a2r(n){
+		return 	n*Math.PI/180;
+	}
+};
+</script>
+</head>
+
+<body>
+
+<div id="div1"></div>
+
+</body>
+</html>

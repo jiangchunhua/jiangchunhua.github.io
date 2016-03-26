@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Move-2</title>
+<style>
+*{ margin:0; padding:0; list-style:none;}
+body{ background:url(images/bg11.jpg) repeat;}
+#box{ width: 950px; height:900px; margin:100px auto; overflow:hidden;}
+#ul1{width:450px; position:relative; float:left; margin-right:50px;}
+#ul1 li{ float:left; background:#f00; width:150px; height:150px; background:url(images/demu.png) no-repeat;}
+#ul1 li.a{ background-position: 0 0;}
+#ul1 li.b{ background-position: -150px 0;}
+#ul1 li.c{ background-position: -300px 0;}
+#ul1 li.d{ background-position: 0px -150px;}
+#ul1 li.e{ background-position: -150px -150px;}
+#ul1 li.f{ background-position: -300px -150px;}
+#ul1 li.g{ background-position: 0 -300px;}
+#ul1 li.h{ background-position: -150px -300px;}
+#ul1 li.i{ background-position: -300px -300px;}
+#box img{ width:450px; height:450px; float:right; display:block;}
+#back{ display:block; line-height:40px; text-align:center; width:100px; height:40px; border-radius:5px; background:#ff0; position:fixed; bottom:0; right:0; text-decoration:none; color:#333;}
+</style>
+<script src="js/move.js"></script>
+<script>
+window.onload=function(){
+	var aLi=document.getElementById('ul1').children;
+	var zIndex=2;
+	var oBtn=document.getElementById('btn');
+	var aPos=[];
+	for(var i=0;i<aLi.length;i++){
+		aPos.push({left:aLi[i].offsetLeft,top:aLi[i].offsetTop});	
+		aLi[i].style.left=aPos[i].left+'px';
+		aLi[i].style.top=aPos[i].top+'px';
+	}
+	for(var i=0;i<aLi.length;i++){
+		aLi[i].style.position='absolute';	
+		aLi[i].style.margin=0;
+		aLi[i].index=i;
+	}
+	for(var i=0;i<aLi.length;i++){
+		drag(aLi[i]);
+	}	
+	function drag(obj){
+		obj.onmousedown=function(ev){
+			obj.style.zIndex=zIndex++;
+			clearInterval(obj.timer);
+			var _this=this;
+			var oEvt=ev||event;
+			var disX=oEvt.clientX-obj.offsetLeft;
+			var disY=oEvt.clientY-obj.offsetTop;
+			document.onmousemove=function(ev){
+				var oEvt=ev||event;
+				obj.style.left=oEvt.clientX-disX+'px';
+				obj.style.top=oEvt.clientY-disY+'px';	
+				var nearObj=findNearest(obj);
+				if(nearObj && nearObj!=obj){
+					move(nearObj,aPos[obj.index]);
+					var tmp=obj.index;
+					obj.index=nearObj.index;
+					nearObj.index=tmp;	
+				}
+			};
+			document.onmouseup=function(){
+				document.onmousemove=document.onmouseup=null;
+				move(obj,aPos[obj.index]);
+				obj.releaseCapture&&obj.releaseCapture();
+			};
+			obj.setCapture&&obj.setCapture();
+			return false;	
+		};	
+	}
+	function findNearest(obj){
+		var minDis=99999999999999;
+		var minDisIndex=-1;
+		for(var i=0;i<aLi.length;i++){
+			if(collTest(obj,aLi[i])){
+				var dis=getDis(obj,aLi[i]);
+				if(dis<minDis){
+					minDis=dis;
+					minDisIndex=i;	
+				}
+			}
+		}
+		if(minDisIndex==-1){
+			return null;
+		}else{
+			return aLi[minDisIndex];	
+		}
+	}
+	function getDis(obj1,obj2){
+		var a=aPos[obj2.index].top-obj1.offsetTop;
+		var b=aPos[obj2.index].left-obj1.offsetLeft;
+		return Math.sqrt(a*a+b*b);
+	}
+	function collTest(obj1,obj2){
+		var l1=obj1.offsetLeft;
+		var t1=obj1.offsetTop;
+		var r1=obj1.offsetLeft+obj1.offsetWidth;
+		var b1=obj1.offsetTop+obj1.offsetHeight;
+		
+		var l2=aPos[obj2.index].left
+		var t2=aPos[obj2.index].top;
+		var r2=aPos[obj2.index].left+obj2.offsetWidth;
+		var b2=aPos[obj2.index].top+obj2.offsetHeight;
+		
+		if(l1>r2 || t1>b2 || r1<l2 || b1<t2){
+			return false;
+		}else{
+			return true;
+		}
+	}
+	var arr=['a','b','c','d','e','f','g','h','i'];
+	arr.sort(function(n1,n2){
+		return Math.random() - 0.5;
+	});	
+	for(var i=0; i<aLi.length;i++){ 
+		aLi[i].className=arr[i];
+	}
+};
+</script>
+</head>
+<body>
+<div id="box">
+    <ul id="ul1">
+        <li class="a"></li>
+        <li class="b"></li>
+        <li class="c"></li>
+        <li class="d"></li>
+        <li class="e"></li>
+        <li class="f"></li>
+        <li class="g"></li>
+        <li class="h"></li>
+        <li class="i"></li>
+    </ul>
+    <img src="images/demu.png" alt="" />
+</div>
+<a id="back" href="move.html">返回首页</a>
+</body>
+</html>

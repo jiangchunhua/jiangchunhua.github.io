@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>h5+css3</title>
+<title>ring</title>
 <style>
 *{margin:0;padding:0;list-style:none;}
 html{ overflow:hidden;}
@@ -33,7 +33,6 @@ window.onload = function(){
 			d = 180 - d;
 			var scale = d/180;
 			scale < 0.3 && (scale = 0.3);
-			aLi[i].style.opacity = scale; 	
 		}
 	},false);
 	var y = 0;
@@ -81,7 +80,6 @@ window.onload = function(){
 				if(speedX == 0&& speedY == 0){
 					clearInterval(timer);
 				}
-				document.title = count++;
 				oUl.style.transform = "perspective(800px) rotateX("+-x/10+"deg) rotateY("+y/10+"deg)"			
 			},30);
 		};	

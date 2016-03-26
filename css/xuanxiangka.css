@@ -1,10 +1,12 @@
 @charset "utf-8";
 /* CSS Document */
+#parent_box{ position:relative; left:0; top:0; width:1120px; height:650px; overflow:hidden; margin:0 auto;}
+#parent{ position:absolute; left:0; top:0; width:100%; margin:0 auto;}
 /* nav */
 .nav{ width:1115px; margin:0 auto; overflow:hidden; position:relative; z-index:999999;}
 .nav ul{ width:1116px; position:fixed; z-index:10; margin-right:-1px;}
 .nav li{ float:left; width:185px; height:50px; line-height:50px; background:#666; font-size:20px; text-align:center; border-right:1px solid #fff; overflow:hidden; position:relative;}
-.nav li.active{ background:#7E07E4;}
+.nav li.active{ border:none;}
 .nav li.bg_shadow{ position:absolute; background:#226CA2; left:0; top:0; z-index:3; border-right:none;}
 .nav li a{ color:#fff; z-index:5; position:relative;}
 /* banner */
@@ -40,7 +42,7 @@
 .kinds div {width:840px; height:500px; position:absolute; left:0; top:0; background:#CCC;}
 .kinds img{ width:840px; height:500px;}
 /* drag */
-.drag{ height:450px; margin:0px auto 80px; position:relative; overflow:hidden;}
+.drag{ height:550px; margin:0px auto 80px; position:relative; overflow:hidden;}
 .drag ul{ position:absolute;left:0;top:135px;}
 .drag ul li{ float:left; position:relative;width:260px;height:179px;}
 .drag ul li img{ width:260px;height:179px; position:absolute;left:0;top:0;}
@@ -52,8 +54,7 @@
 .big li img{ width:150px; height:150px;}
 .big div{ width:0px; height:0px; position:absolute; left:50%; top:50%; overflow:hidden;}
 .big div img{ width:500px; height:400px;}
-.big div span{ position:absolute; top:0; right:0; width:30px; height:30px; line-height:30px; text-align:center; font-size:300%; cursor:pointer;}
-.big div span.active{ background:#fff;}
+.big div span{ position:absolute; top:0; right:0; width:30px; height:30px; line-height:30px; text-align:center; font-size:300%; cursor:pointer; background:#fff;}
 /* random */
 .random li{ width:100px; height:100px; border-radius:50%; border:1px solid #fff; position:fixed; background:url(../images/sbj.jpg) no-repeat; opacity:0; filter:alpha(opacity=0);}
 .random li.a{ left:10px; top:100px; background-position:-43px -122px;}

@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="author" content="智能社 - zhinengshe.com" />
+<meta name="copyright" content="智能社 - zhinengshe.com" />
+<title>智能社 - www.zhinengshe.com</title>
+<style>
+*{ margin:0; padding:0; list-style:none;}
+html{ overflow:hidden;}
+#div1{position:relative;width:800px; height:500px; margin:50px auto; background:url(images/1.jpg) no-repeat;}
+#div1 span{ position:absolute;left:0;top:0;width:100px; height:100px; background:url(images/0.jpg) no-repeat;}
+#back{ display:block; line-height:40px; text-align:center; width:100px; height:40px; border-radius:5px; background:#ff0; position:fixed; bottom:0; right:0; text-decoration:none; color:#333;}
+.box{ width:100px; height:30px; background:#2E51BF; margin:10px auto; border-radius:5px; color:#fff; text-align:center; line-height:30px; font-size:16px;
+box-shadow:inset 0 0 10px #fff,0 5px 3px #000;
+transition:0.5s all ease;
+position:relative; left:0; top:0;
+}
+.box:hover{ box-shadow:inset 0 0 20px #fff,0 5px 3px #000; }
+.box:active{ box-shadow:inset 0 0 20px #fff,0 0 3px #000; top:8px;}
+</style>
+<script>
+window.onload = function(){
+	var oDiv = document.getElementById("div1");
+	var oBoom=document.querySelector('.box')
+	var R = 4;
+	var C = 7;
+	var len = R*C;
+	
+	for(var r = 0; r < R; r++){
+		for(var c = 0; c < C; c++){
+			var oSpan = document.createElement("span");
+			oDiv.appendChild(oSpan);
+			oSpan.style.width = oDiv.offsetWidth/C + "px";
+			oSpan.style.height = oDiv.offsetHeight/R + "px";
+			oSpan.style.left = oSpan.offsetWidth*c + "px";
+			oSpan.style.top  = oSpan.offsetHeight*r + "px";
+			oSpan.style.backgroundPosition = -oSpan.offsetLeft+"px -"+oSpan.offsetTop + "px";
+		}
+	}
+	var iNow = 0;
+	var aSpan = oDiv.children;
+	oBoom.onclick = function(){
+		for(var i = 0; i < len; i++){
+			aSpan[i].style.transition = "none";	
+			aSpan[i].style.opacity = "1";
+			aSpan[i].style.transform = "translate(0px,0px) rotateX(0deg) rotateY(0deg)";
+			aSpan[i].style.backgroundImage = "url(images/"+iNow%3+".jpg)";
+		}
+		oDiv.style.backgroundImage = "url(images/"+(iNow+1)%3+".jpg)";		
+		iNow++;
+		setTimeout(function(){
+			for(var i = 0; i < len; i++){
+				aSpan[i].style.transition = "1s all ease";
+				var x = aSpan[i].offsetLeft + aSpan[i].offsetWidth/2 - oDiv.offsetWidth/2;
+				var y = aSpan[i].offsetTop + aSpan[i].offsetHeight/2 - oDiv.offsetHeight/2;
+				aSpan[i].style.transform = "translate("+x+"px,"+y+"px) rotateX("+rnd(-180,180)+"deg) rotateY("+rnd(-180,180)+"deg)";
+				aSpan[i].style.opacity = "0";
+			}
+		},0);
+	};	
+	function rnd(n,m){
+		return Math.floor(Math.random()*(m-n)+n);
+	}
+};
+
+</script>
+</head>
+
+<body>
+<div id="div1"></div>
+<div class="box">下一页</div>
+<a id="back" href="path.html">返回首页</a>
+</body>
+</html>

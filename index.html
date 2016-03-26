@@ -13,16 +13,30 @@ body{ background:url(images/bg.jpg) no-repeat; font-family:"微软雅黑"}
 .box li div{ width:100%; height:100%; position:absolute; left:0; top:200px; background:#8CC2E5; border-radius:10px;}
 .box li a{ position:absolute; left:-0px; top:-100px; width:100%; height:50%; color:#000; text-align:center; line-height:100px; font-size:200%; cursor:pointer; text-decoration:none;}
 .box li p{ text-align:center; color:#fff; margin-top:30px;}
-.box li i{ text-align:center; color:#fff; font-style:normal; text-align:center; display:block;}
+
+#remind{ width:100%; height:100%; position:absolute; left:0; top:0}
+#shadow{width:100%; height:100%; background:#000; opacity:0.5; filter:alpha(opacity=50); position:absolute; left:0; top:0 }
+#remind_content{ width:500px; height:300px; background:#fff; border-radius:10px; position:absolute; left:50%; top:50%; margin-left:-250px; margin-top:-150px;}
+#remind_content h3{ margin-left:10px; margin-top:10px; font-size:20px;}
+#remind_content p{ margin:10px auto; width:300px; line-height:30px;}
+#remind_content a{ position:absolute; right:0; top:0; width:30px; height:30px; text-decoration:none; font-size:200%;}
+#remind_content span{ position:absolute; width:100px; height:30px; left:50%; margin-left:-50px; bottom:30px;}
 </style>
 <script src="js/move.js"></script>
 
 <script>
 window.onload=function(){
 	var oBox=document.getElementById('box');
+	var oShadow=document.getElementById('shadow');
+	var oContent=document.getElementById('remind_content');
+	var oClose=document.getElementById('close');
+	var oCount=document.getElementById('count');
+	var oRemind=document.getElementById('remind');
+
 	var aLi=oBox.children[0].children;
 	var aLiPos=[];
 	var ready=true;
+	
 	for(var i=0;i<aLi.length;i++){
 		aLiPos.push({left:aLi[i].offsetLeft,top:aLi[i].offsetTop});
 		aLi[i].style.left=aLiPos[i].left+'px';
@@ -37,41 +51,66 @@ window.onload=function(){
 		aLi[i].style.left=aLiPos[0].left+'px';
 		aLi[i].style.top=aLiPos[0].top+'px';
 	}
-	setTimeout(function(){
-		for(var i=0;i<aLi.length;i++){
-			move(aLi[i],{opacity:1});
+	function close(){
+		oShadow.style.display='none';
+		oContent.innerHTML='';
+		move(oContent,{width:0, height:0, marginLeft:0,marginTop:0, opacity:0});
+		oRemind.style.display='none';
+	}
+	
+	oClose.onclick=function(){
+		close();
+		startView();
+	}
+	var n=3;
+	var closeTimer=setInterval(function(){
+		n--;
+		oCount.innerHTML=n+'秒后关闭';
+		if(n==0){
+			clearInterval(closeTimer);
+			close();
+			startView();
 		}
-		var n=0;
-		var timer=setInterval(function(){
-			if(n<=2){
-				move(aLi[n],aLiPos[n],{fn:function(){
-					if(n>2){
-						aLi[3].style.left=aLi[4].style.left=aLi[5].style.left=aLiPos[2].left+'px';
-						aLi[3].style.top=aLi[4].style.top=aLi[5].style.top=aLiPos[2].top+'px';
-					}
-				}});
-			}else if(n==3){
-				
-				move(aLi[3],aLiPos[5],{fn:function(){
-					aLi[4].style.left=aLi[5].style.left=aLiPos[5].left+'px';
-					aLi[4].style.top=aLi[5].style.top=aLiPos[5].top+'px';				
-				}});
-			}else if(n==4){
-				move(aLi[4],aLiPos[4],{fn:function(){
-					aLi[5].style.left=aLiPos[4].left+'px';
-					aLi[5].style.top=aLiPos[4].top+'px';	
-				}});
-			}else if(n==5){
-				move(aLi[n],aLiPos[3],{fn:function(){
-					change();
-				}});
+	},1000)
+	
+	
+	function startView(){
+		setTimeout(function(){
+			for(var i=0;i<aLi.length;i++){
+				move(aLi[i],{opacity:1});
 			}
-			n++;
-			if(n==aLi.length){
-				clearInterval(timer);
-			}
-		},600)
-	},300);
+			var n=0;
+			var timer=setInterval(function(){
+				if(n<=2){
+					move(aLi[n],aLiPos[n],{fn:function(){
+						if(n>2){
+							aLi[3].style.left=aLi[4].style.left=aLi[5].style.left=aLiPos[2].left+'px';
+							aLi[3].style.top=aLi[4].style.top=aLi[5].style.top=aLiPos[2].top+'px';
+						}
+					}});
+				}else if(n==3){
+					
+					move(aLi[3],aLiPos[5],{fn:function(){
+						aLi[4].style.left=aLi[5].style.left=aLiPos[5].left+'px';
+						aLi[4].style.top=aLi[5].style.top=aLiPos[5].top+'px';				
+					}});
+				}else if(n==4){
+					move(aLi[4],aLiPos[4],{fn:function(){
+						aLi[5].style.left=aLiPos[4].left+'px';
+						aLi[5].style.top=aLiPos[4].top+'px';	
+					}});
+				}else if(n==5){
+					move(aLi[n],aLiPos[3],{fn:function(){
+						change();
+					}});
+				}
+				n++;
+				if(n==aLi.length){
+					clearInterval(timer);
+				}
+			},600)
+		},300);
+	}
 	function change(){
 		for(var i=0;i<aLi.length;i++){
 			(function(index){
@@ -79,7 +118,7 @@ window.onload=function(){
 					move(aLi[index].children[0],{top:100});
 					move(aLi[index].children[1],{top:0})
 				}});
-			})(i)
+			})(i)																																																																										
 			shake();
 		}
 	}
@@ -137,9 +176,9 @@ window.onload=function(){
         </li>
     	<li>
         	<span></span>
-            <a href="yundong.html">运动</a>
+            <a href="game.html">游戏</a>
             <div>
-            	<p>一些高级运动</p>
+            	<p>自己制作的一款游戏，不完美。</p>
             </div>
         </li>
     	<li>
@@ -151,26 +190,35 @@ window.onload=function(){
         </li>
     	<li>
         	<span></span>
-            <a href="#">HTML5+CSS3</a>
+            <a href="path.html">HTML5+CSS3</a>
             <div>
             	<p>H5和C3的特效</p>
             </div>
         </li>
     	<li>
         	<span></span>
-            <a href="#">关于我</a>
+            <a href="move.html">运动</a>
             <div>
-            	<i>关注新技术，对于前端开发有浓厚兴趣。抗压能力强，有责任心，能适应适量的加班。有良好的团队合作精神及学习能力，乐于分享。</i>
+            	<p>两个小运行</p>
             </div>
         </li>
     	<li>
         	<span></span>
-            <a href="#">联系我</a>
+            <a href="contact.html">联系我</a>
             <div>
             	<p>电话:18512137486</br>邮箱:mujujch@126.com</p>
             </div>
         </li>
     </ul>
+</div>
+<div id="remind">
+	<div id="shadow"></div>
+    <div id="remind_content">
+    	<h3>温馨提示：</h3>
+        <p>本作品中含有HTML5和CSS3的元素，为了您有更好的体验，请使用高版本的浏览器浏览,谢谢!</p>
+        <a id="close" href="javascript:;">&times;</a>
+        <span id="count">3秒后关闭</span>
+    </div>
 </div>
 </body>
 </html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Canvas_Clock</title>
+<style>
+#back{ display:block; line-height:40px; text-align:center; width:100px; height:40px; border-radius:5px; background:#ff0; position:fixed; bottom:0; right:0; text-decoration:none; color:#333;}
+</style>
+<script>
+function d2a(n){
+	return n*Math.PI/180;
+}
+function fillZero(n){
+	return n>9?''+n:'0'+n
+}
+window.onload=function(){
+	var oC=document.querySelector('#c1');
+	oC.width=document.documentElement.clientWidth;
+	oC.height=document.documentElement.clientHeight;
+	var gd=oC.getContext('2d');
+	var cx=oC.width/2;
+	var cy=oC.height/2;
+	var r=250;
+	var h=50;
+	gd.font=h+'px kaiti';
+	gd.lineWidth=30;
+	var i=0;
+	var timer=setInterval(function(){
+		var d=new Date();
+		var iH=d.getHours();
+		var iM=d.getMinutes();
+		var iS=d.getSeconds();
+		var iMs=d.getMilliseconds();	
+		gd.clearRect(0,0,oC.width,oC.height);
+		setD(cx,cy,r-60,0,iH%12*30+iM/60*30,'red');
+		setD(cx,cy,r-30,0,iM*6+iS/60*6,'blue');
+		setD(cx,cy,r,0,iS*6+iMs/1000*6,'green');
+
+		var arr=[fillZero(iH),fillZero(iM),fillZero(iS)];
+		var str=arr.join(':');
+		var tW=gd.measureText(str).width;
+		gd.fillText(str,cx-tW/2,cy+h/2);
+		gd.stroke();
+
+		function setD(cx,cy,r,start,end,color){
+			gd.beginPath();
+			start-=90;
+			end-=90;
+			gd.arc(cx,cy,r,d2a(start),d2a(end),false);
+			gd.fillStyle=color;
+			gd.strokeStyle=color;
+			gd.stroke();
+		}
+
+	},16)
+};	
+</script>
+</head>
+<body>
+<canvas id="c1">		
+</canvas>	
+<a id="back" href="path.html">返回首页</a>
+</body>
+</html>

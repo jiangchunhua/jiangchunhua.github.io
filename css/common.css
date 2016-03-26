@@ -13,5 +13,5 @@ img,input,select,textarea{ vertical-align:top;}
 .clearFix:after{ content:''; display:block; clear:both;}
 .clearFix{ zoom:1;}
 
-body{ font-size:12px; font-family:"微软雅黑"; color:#666; background:url(../images/bg11.jpg) repeat-y;}
+body{ font-size:12px; font-family:"微软雅黑"; color:#666; background:url(../images/bg11.jpg) repeat;}
 .wrapper{ width:1120px; margin:0 auto; position:relative;}

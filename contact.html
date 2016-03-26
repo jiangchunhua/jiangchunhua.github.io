@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>my_web</title>
+<style>
+*{ margin:0; padding:0; list-style:none;}
+a{ text-decoration:none; color:#333;}
+body{ background:url(images/bg11.jpg) repeat; overflow:hidden}
+#box li{ width:300px; height:400px; background:#ccc; border-radius:20px; box-shadow:0 0 10px #fff; position:relative; position:absolute; top:50%; margin-top:-200px; } 
+#box li h3{ text-align:center; margin:10px 0 30px;}
+#box li p{ text-align:center; padding:0 20px 20px; line-height:30px;}
+#box li span{ display:block; margin-top:35px; margin-left:30px;}
+#back{ display:block; line-height:40px; text-align:center; width:100px; height:40px; border-radius:5px; background:#ff0; position:fixed; bottom:0; right:0; text-decoration:none; color:#333;}
+#box li.left{ left:-310px;}
+#box li.right{ right:-310px;}
+</style>
+<script src="js/move.js"></script>
+<script>
+
+
+window.onload=function(){
+	var oBox=document.getElementById('box');
+	var aLi=oBox.children[0].children;
+	var speed = 0;
+	var left = 0;
+	var right = 0;
+	var pos=[document.documentElement.clientWidth/2-aLi[0].offsetWidth-50,
+			document.documentElement.clientWidth/2-aLi[0].offsetWidth-50	
+		];
+	setTimeout(function(){
+		spring(aLi[0],pos[0]);
+		spring2(aLi[1],pos[1]);
+	},1000)
+	function spring(obj,iTarget){
+		clearInterval(obj.timer);
+		obj.timer = setInterval(function(){
+			speed += (iTarget - left)/5;
+			speed *= 0.75;
+			left += speed;
+			obj.style.left = Math.round(left) + "px";
+			if(obj.offsetLeft == iTarget && Math.abs(speed) < 1){
+				clearInterval(obj.timer);
+			}
+		},30);
+	}
+	function spring2(obj,iTarget){
+		clearInterval(obj.timer);
+		obj.timer = setInterval(function(){
+			speed += (iTarget - right)/5;
+			speed *= 0.75;
+			right += speed;
+			obj.style.right = Math.round(right) + "px";
+			if(obj.offsetLeft == iTarget && Math.abs(speed) < 1){
+				clearInterval(obj.timer);
+			}
+		},30);
+	}
+};
+</script>
+</head>
+
+<body>
+<div id="box">
+    <ul>
+        <li class="left">
+        	<h3>关于我</h3>
+            <p>关注新技术，对于前端开发有浓厚兴趣，在工作的同时自学HTML和CSS，从机械行业转行到IT行业，抗压能力强，有责任心，能适应适量的加班，曾因领导决策失误而为保证项目能在原计划时间内完成而独自加班到深夜。有良好的团队合作精神及学习能力，乐于分享。</p>
+        </li>
+        <li class="right">
+        	<h3>联系方式</h3>
+            <span>姓名:姜春华</span>
+            <span>性别:男</span>
+            <span>电话:18512137486</span>
+            <span>邮箱:mujujch@126.com</span>
+            <span>QQ:543748201</span>
+        </li>
+    </ul>
+</div>
+<a id="back" href="index.html">返回首页</a>
+</body>
+</html>

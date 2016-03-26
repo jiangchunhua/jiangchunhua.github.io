@@ -1,0 +1,262 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>弹弹弹</title>
+<style>
+*{ margin:0; padding:0; list-style:none;}
+a{ text-decoration: none; }
+html{ overflow:hidden;}
+#game{width: 551px; height:600px; border: 1px solid #000; margin:10px auto; overflow: hidden; }
+#area_box{ width:450px; height:600px;  border-right: 1px solid #000;position:relative; background: #ccc; float: left;}
+#div1{ position:absolute;left:200px; bottom:50px;width:50px; height:50px; background:red; z-index:5;}
+#bar{ position:absolute; width:150px; height:50px; bottom:0; left:150px;}
+#bar li{ width:48px; height:48px; border:1px solid #fff; background:#000; float:left;}
+#spots{ position:absolute; left: 0; top: 0; width: 100%; height: 150px;}
+#spots li{ width: 48px; height: 48px; border: 1px solid #fff; background: orange; float: left;}
+#score{ width: 100px; height:100%; border-left: none; background:#999; float: left; position: relative;}
+#score .title{ width: 100%; height: 50px; background: #fcc; text-align: center; line-height: 50px;}
+#score h2{ font-size:18px; margin:10px 0; text-align:center;}
+#score .rule{ font-size:14px; margin:0 5px; line-height:20px;}
+#start_btn{ width: 100%; height: 50px; background: yellow; text-align: center; line-height: 50px; position: absolute; bottom: 0; left: 0; color: #000; }
+#restart{ width: 100%; height: 50px; background: #cf0; text-align: center; line-height: 50px; position: absolute; bottom: 50px; left: 0; color: #000; }
+#your_score{ background: #ccf; display: block; width: 100%; height: 50px; line-height: 50px; text-align: center; }
+#back{ display:block; line-height:40px; text-align:center; width:100px; height:40px; border-radius:5px; background:#ff0; position:fixed; bottom:0; right:0; text-decoration:none; color:#333;}
+</style>
+<script>
+function getStyle(obj,attr){
+	return obj.currentStyle?obj.currentStyle[attr]:getComputedStyle(obj,false)[attr];
+}
+function rnd(n,m){
+	return Math.round(n+Math.random()*(m-n))
+};
+window.onload = function(){
+	var oDiv = document.getElementById("div1");
+	var oAreaBox = document.getElementById("area_box");
+	var oBar = document.getElementById("bar");
+	var oSpots = document.getElementById("spots");
+	var oStart= document.getElementById("start_btn");
+	var oYrScroe= document.getElementById("your_score");
+	var oMusic= document.getElementById("music");
+	var oVictory= document.getElementById("victory");
+	var oFail= document.getElementById("fail");
+	var speedX = 0;
+	var speedY = 0;
+	var lastX = 0;
+	var lastY = 0;
+	var timer = null;
+	var score=0;
+	var sx=50;
+	var sy=50;
+
+	var bLeft=false;
+	var bRight=false;
+	var timerKey=null;
+
+	var oldBarB=parseInt(getStyle(oBar,'bottom'));
+	var oldDivB=parseInt(getStyle(oDiv,'bottom'));
+
+	var oAreaBoxW=parseInt(getStyle(oAreaBox,'width'));
+	var oAreaBoxH=parseInt(getStyle(oAreaBox,'height'));
+	var total=27;
+	for(var i=0;i<total;i++){
+		var oLi=document.createElement('li');
+ 		oSpots.appendChild(oLi);
+	}
+
+	var aSpots=oSpots.children;
+	var aPos=[];
+	
+	for(var i=0;i<aSpots.length;i++){
+		aPos.push({left:aSpots[i].offsetLeft,top:aSpots[i].offsetTop});
+		aSpots[i].style.left=aPos[i].left+'px';
+		aSpots[i].style.top=aPos[i].top+'px';
+	}
+	for(var i=0;i<aSpots.length;i++){
+		aSpots[i].style.position='absolute';
+		aSpots[i].index=i;
+	}
+
+	var aSpotsL=[];
+	var aSpotsR=[];
+	var aSpotsB=[];
+	for(var i=0;i<aSpots.length;i++){
+		aSpotsL.push(aSpots[i].offsetLeft);
+		aSpotsR.push(aSpots[i].offsetLeft+aSpots[i].offsetWidth);
+		aSpotsB.push(aSpots[i].offsetTop+aSpots[i].offsetHeight);
+	}
+	document.onkeydown=function(ev){
+		var ev=ev||event;
+		var l = oBar.offsetLeft;		
+		if(ev.keyCode==37){
+			bLeft=true;
+			l-=50;
+			if(l<0)l=0;
+			oBar.style.left=l+'px';
+			if(oDiv.offsetTop+oDiv.offsetWidth==oBar.offsetTop){
+				var wL=oDiv.offsetLeft-50;
+				if(wL<0)wL=0;
+				oDiv.style.left=wL+'px';
+			}
+		}
+		if(ev.keyCode==39){
+			bRight=true;
+			l+=50;
+			if(l>oAreaBoxW-oBar.offsetWidth){
+				l=oAreaBoxW-oBar.offsetWidth;
+			}
+			oBar.style.left=l+'px';
+			if(oDiv.offsetTop+oDiv.offsetWidth==oBar.offsetTop){
+				var wL=oDiv.offsetLeft+50;
+				if(wL>350){
+					wL=350;
+				}
+				oDiv.style.left=wL+'px';
+			}
+		}
+	};
+	document.onkeyup=function(){
+		clearInterval(timerKey);
+		bLeft=false;
+		bRight=false;
+	};
+	oStart.onclick=function(){
+		start();
+	};
+	function findNearest(obj){
+		var minDis=99999999999999;
+		var minDisIndex=-1;
+		for(var i=0;i<aSpots.length;i++){
+			if(collTest(obj,aSpots[i])){
+				var dis=getDis(obj,aSpots[i]);
+				if(dis<minDis){
+					minDis=dis;
+					minDisIndex=i;	
+				}
+			}
+		}
+		if(minDisIndex==-1){
+			return null;
+		}else{
+			return aSpots[minDisIndex]	
+		}
+	}
+	function getDis(obj1,obj2){
+		var a=aPos[obj2.index].top-obj1.offsetTop;
+		var b=aPos[obj2.index].left-obj1.offsetLeft;
+		return Math.sqrt(a*a+b*b);
+	}
+
+	function collTest(obj1,obj2){
+		var l1=obj1.offsetLeft;
+		var t1=obj1.offsetTop;
+		var r1=obj1.offsetLeft+obj1.offsetWidth;
+		var b1=obj1.offsetTop+obj1.offsetHeight;
+		
+		var l2=obj2.offsetLeft;
+		var t2=obj2.offsetTop;
+		var r2=obj2.offsetLeft+obj2.offsetWidth;
+		var b2=obj2.offsetTop+obj2.offsetHeight;
+		
+		if(l1>=r2 || t1>b2 || r1<=l2 || b1<=t2){
+			return false;
+		}else{
+			sx*=-1;
+			sy*=1;
+			return true;
+		}	
+	}
+
+	function start(){
+		clearInterval(timer);
+		timer=setInterval(function(){
+			var t = oDiv.offsetTop-sx;
+			var l = oDiv.offsetLeft-sy;
+			oDiv.style.left = l + "px";
+			oDiv.style.top  = t + "px";
+			var oDivT=oDiv.offsetTop;
+			var oDivB=oDiv.offsetTop+oDiv.offsetHeight;
+			var oDivL=oDiv.offsetLeft
+			var oDivR=oDiv.offsetLeft+oDiv.offsetWidth;
+			var oBarT=oBar.offsetTop;
+			var oBarL=oBar.offsetLeft;
+			var oBarR=oBar.offsetLeft+oBar.offsetWidth;
+			if(l<=0){
+				sx*=1;
+				sy*=-1;
+			}
+			if(l>=oAreaBoxW-oDiv.offsetWidth){
+				sx*=1;
+				sy*=-1;
+			}
+			if(t<=0){
+				sx*=-1;
+				sy*=1;
+			}
+			if(t>=oAreaBoxH-oDiv.offsetHeight){
+				oFail.play();
+				alert('啊偶~~你输了');
+				clearInterval(timer);
+			}
+			if(oDivB<oBarT||oDivL>oBarR||oDivR<oBarL){
+			}else{
+				sx*=-1;
+				sy*=1;
+			}
+			var thisLi=findNearest(oDiv);
+			if(thisLi&&thisLi!=oDiv){
+				oMusic.play();
+				thisLi.style.display='none';
+				changeColor(oDiv);
+				score+=1;
+				oYrScroe.innerHTML=score;
+				
+				if(score==total){
+					oVictory.play();
+					alert('你好厉害!!!');
+					clearInterval(timer);
+				}
+			}
+		},500)	
+	}
+	function changeColor(obj){
+		return obj.style.background='rgb('+rnd(0,256)+','+rnd(0,256)+','+rnd(0,256)+')';
+	}
+};
+</script>
+</head>
+
+<body>
+<div id="game">
+	<div id="area_box">
+	    <div id="div1"></div>
+	    <ul id="bar">
+	        <li></li>
+	        <li></li>
+	        <li></li>
+	    </ul>
+	    <ul id="spots">
+	    </ul>
+	</div>
+	<div id="score">
+		<p class="title">得分</p>
+		<span id="your_score">0</span>
+        <div>
+        	<h2>游戏规则：</h2>
+            <p class="rule">点击开始，键盘左右键控制黑块方向，不能让红块接触底边，当红块落下和黑块接触时，可以快速移动黑块带动红块向左或向右移动一格。<br>重新开始请按F5。</p>
+        </div>
+		<a href="javascript:;">
+			<audio src="music/pixiedust.ogg" id="music"></audio>
+		</a>
+		<a href="javascript:;">
+			<audio src="music/Heaven.ogg" id="victory"></audio>
+		</a>
+		<a href="javascript:;">
+			<audio src="music/Drip.ogg" id="fail"></audio>
+		</a>
+		<a href="javascript:;" id="start_btn">开始</a>
+	</div>
+</div>
+<a id="back" href="path.html">返回首页</a>
+</body>
+</html>

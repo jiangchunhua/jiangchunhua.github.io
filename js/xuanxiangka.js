@@ -1,67 +1,14 @@
 // JavaScript Document
 //nav
-function d2a(n){
-	return n*Math.PI/180;
-}
-function a2d(n){
-	return n*180/Math.PI;
-}
-var lastX,lastY;
-document.onmousemove=function (ev){
-	var oEvent=ev||event;	
-	lastX=oEvent.clientX;
-	lastY=oEvent.clientY;
-};
-function addWall(obj){
-	var oS=obj.children[1];
-	obj.onmouseenter=function (){
-		var cx=obj.offsetLeft+obj.offsetWidth/2;
-		var cy=obj.offsetTop+obj.offsetHeight/2;
-		var a=lastX-cx;
-		var b=cy-lastY;
-		var ang=90-a2d(Math.atan2(b, a));	
-		if(ang>=-45 && ang<=45){
-			oS.style.left=0;
-			oS.style.top='-185px';
-			move(oS, {left: 0, top: 0});
-		}else if(ang>=45 && ang<=135){
-			oS.style.left='185px';
-			oS.style.top=0;
-			move(oS, {left: 0, top: 0});
-		}else if(ang>=135 && ang<=225){
-			oS.style.left=0;
-			oS.style.top='185px';
-			move(oS, {left: 0, top: 0});
-		}else{
-			oS.style.left='-185px';
-			oS.style.top=0;
-			move(oS, {left: 0, top: 0});
-		}
-	};
-	obj.onmouseleave=function (){
-		var cx=obj.offsetLeft+obj.offsetWidth/2;
-		var cy=obj.offsetTop+obj.offsetHeight/2;
-		var a=lastX-cx;
-		var b=cy-lastY;
-		var ang=90-a2d(Math.atan2(b, a));
-		if(ang>=-45 && ang<=45){
-			move(oS, {left: 0, top: -185});
-		}else if(ang>=45 && ang<=135){
-			move(oS, {left: 185, top: 0});
-		}else if(ang>=135 && ang<=225){
-			move(oS, {left: 0, top: 185});
-		}else{
-			move(oS, {left: -185, top: 0});
-		}
-	};
-}
 //wheel
 window.onload=function (){
+	var oParent=document.getElementById('parent');
 	var oNav=document.getElementById('nav');
 	var aNavLi=oNav.children[0].children;
 	var oBgBox=aNavLi[aNavLi.length-1];
 	var speed = 0;
 	var left = 0;
+	var _this=null;
 	function spring(obj,iTarget){
 		clearInterval(obj.timer);
 		obj.timer = setInterval(function(){
@@ -73,18 +20,20 @@ window.onload=function (){
 				clearInterval(obj.timer);
 			}
 		},30);
-	}	
+	}
+	//alert(aNavLi[0].innerHTML)
+
 	for(var i = 0; i < aNavLi.length - 1; i++){
 		aNavLi[i].onmouseover = function(){
 			spring(oBgBox,this.offsetLeft);
 		};
-		aNavLi[i].onclick = function(){
-			spring(oBgBox,this.offsetLeft);
-			for(var i = 0; i < aNavLi.length - 1; i++){
-				aNavLi[i].className='';
+		aNavLi[i].onmouseout = function(){
+			if(!_this){
+				spring(oBgBox,aNavLi[0].offsetLeft);
+			}else{
+				spring(oBgBox,_this.offsetLeft);
 			}
-			this.className='active';
-		};
+		};	
 	}		
 //banner	
 	var oBanner=document.getElementById('banner');
@@ -105,7 +54,10 @@ window.onload=function (){
 	'藏獒',
 	'泰迪',
 	'德国牧羊犬'
-	];		
+	];
+	aNavLi[0].onclick=function(){
+		move(oParent,{top:-oBanner.offsetTop+100});
+	};			
 	for(var i=0;i<aShadow.length;i++){
 		(function(index){
 			aShadow[i].onmouseover=function(){
@@ -159,7 +111,11 @@ window.onload=function (){
 	var aCardLi=oCard.children[0].children;
 	oCardUl.style.width=aCardLi[0].offsetWidth*aCardLi.length+16*aCardLi.length+'px';
 	var oGuide=document.getElementById('guide');
-	var oBar=oGuide.children[0];
+	var oBar=oGuide.children[0];	
+	aNavLi[1].onclick=function(){
+		move(oParent,{top:-oCard.offsetTop+100});
+		_this=this;
+	};
 	oBar.onmousedown=function(ev){
 		var oEvt=ev||event;
 		var disX=oEvt.clientX-oBar.offsetLeft;
@@ -215,6 +171,11 @@ window.onload=function (){
 	//kinds
 	var oKinds=document.getElementById('kinds');
 	var aKindsDiv=oKinds.children;
+	
+	aNavLi[2].onclick=function(){
+		move(oParent,{top:-oKinds.offsetTop+100});
+		_this=this;
+	};
 	for(var i=1;i<aKindsDiv.length;i++){
 		aKindsDiv[i].style.left=aKindsDiv[i].offsetWidth+20*(i-1)+'px';
 	}
@@ -237,7 +198,11 @@ window.onload=function (){
 	var aDragLi=oDragUl.children;
 	var aDragImg=oDragUl.getElementsByTagName('img');
 	var aDragSpan=oDragUl.getElementsByTagName('span');
-	oDragUl.style.width=oDragUl.children.length*aDragLi[0].offsetWidth+'px';	
+	oDragUl.style.width=oDragUl.children.length*aDragLi[0].offsetWidth+'px';
+	aNavLi[3].onclick=function(){
+		move(oParent,{top:-oDrag.offsetTop+100});
+		_this=this;
+	};	
 	oDragUl.onmousedown=function(ev){
 		var oEvt=ev||event;
 		var disX=oEvt.clientX-oDragUl.offsetLeft;
@@ -290,6 +255,10 @@ window.onload=function (){
 	'lachang',
 	'samo'
 	];
+	aNavLi[4].onclick=function(){
+		move(oParent,{top:-oBig.offsetTop+100});
+		_this=this;
+	};	
 	for(var i=0;i<aBigLi.length;i++){
 		aBigLi[i].index=i;
 		aBigLi[i].onclick=function(){
@@ -300,9 +269,6 @@ window.onload=function (){
 			oBig.appendChild(oDiv);
 			move(oDiv,{width:500,height:400,marginTop:-220,marginLeft:-250})
 			var oClose=oDiv.children[1];
-			oClose.onmouseover=function(){
-				this.className='active';
-			};
 			oClose.onclick=function(){
 					move(oDiv,{width:0,height:0,marginTop:0,marginLeft:0},{fn:function(){
 						oBig.removeChild(oDiv);	
@@ -353,6 +319,12 @@ window.onload=function (){
 			oCloseReady=true;
 		}
 	};
+	
+	
+	
+	
+	
+	
 };	
 	
 	

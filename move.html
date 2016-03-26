@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>my_web</title>
+<style>
+*{ margin:0; padding:0; list-style:none;}
+a{ text-decoration:none; color:#333;}
+body{ background:url(images/bg11.jpg) repeat;}
+#box{ width:630px; height:400px; position:relative; left:50%; top:50%; margin-left:-315px; margin-top:150px; overflow:hidden; padding:10px;}
+#box ul{ width:700px;}
+#box li{ width:300px; height:400px; float:left; margin-right:30px; background:#ccc; border-radius:20px; box-shadow:0 0 10px #fff; position:relative; -cursor:pointer;} 
+#box li img{ width:250px; height:250px; margin-left:25px; margin-top:50px;}
+#box li p{ text-align:center; margin-top:30px;}
+#back{ display:block; line-height:40px; text-align:center; width:100px; height:40px; border-radius:5px; background:#ff0; position:fixed; bottom:0; right:0; text-decoration:none; color:#333;}
+</style>
+<script src="js/move.js"></script>
+
+<script>
+var arr=[
+'move2.html',
+'move1.html'
+];
+window.onload=function(){
+	var oBox=document.getElementById('box');
+	var aLi=oBox.children[0].children;
+	for(var i=0;i<aLi.length;i++){
+		aLi[i].index=i;
+		aLi[i].onmouseover=function(){
+			for(var i=0;i<aLi.length;i++){
+				move(aLi[i],{ opacity:0.5})
+			}
+			move(this,{opacity:1})
+		};
+		aLi[i].onmouseout=function(){
+			for(var i=0;i<aLi.length;i++){
+				move(aLi[i],{ opacity:1})
+			}
+		};
+		aLi[i].onclick=function(){
+			this.children[0].href=arr[this.index];
+		};
+	}
+};
+</script>
+</head>
+
+<body>
+<div id="box">
+    <ul>
+        <li>
+        	<a href="javascript:;">
+                <img src="images/cover1.png" alt="" />
+                <p>运动一</p>
+            </a>
+        </li>
+        <li>
+        	<a href="javascript:;">
+                <img src="images/cover2.png" alt="" />
+                <p>运动二</p>
+            </a>
+        </li>
+    </ul>
+</div>
+<a id="back" href="index.html">返回首页</a>
+</body>
+</html>

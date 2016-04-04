@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+<meta charset="UTF-8">
+<title>jsonp</title>
+<style>
+*{ margin:0; padding:0; list-style:none;}
+.weather{ width:502px; height:603px; margin:20px auto; border:1px solid #000; overflow:hidden;}
+.weather .left{ width:280px; height:100%; float:left; background:#07A3EF; border-right:2px solid#fff; padding:10px;}
+.weather .detail p{ margin:5px; color:#fff;}
+.weather .detail span{ font-size:12px;}
+.city{ width:100%; padding:10px;}
+.weather ul{ float:left; width:200px; height:100%; background:#07A3EF;}
+.weather ul li{ width:100%; height:200px; border-bottom:1px solid #fff; background:#07A3EF; text-align:center;}
+.weather li h3{ font-size:12px; padding:15px;}
+.weather img{ width:60px;}
+.weather .pic{ width:100%; height:60px; margin:10px auto;}
+</style>
+<script src="js/jquery-1.11.3.min.js"></script>
+<script>
+window.onload=function (){
+	var oSlt=document.getElementById('slt');
+	var oCur=document.getElementById('current');
+	var oLater=document.getElementById('later');
+	var city='青浦';
+	oSlt.onchange=function(){
+		oCur.innerHTML='';
+		oLater.innerHTML='';
+		city=oSlt.value;
+		weather();
+	};
+	weather();
+	function weather(){
+		$.ajax({
+			url:"http://api.map.baidu.com/telematics/v3/weather",
+			data:"location="+city+"&output=json&ak=9XBcMilGx9FCl96Yt0tp1A5C4SaGQu3K",
+			dataType:"jsonp",
+			success: function(json){
+				//console.log(json)
+				if(json.error!=0){
+					alert('数据出错!')
+				}else{
+					//当前页
+					var weatherData=json.results[0].weather_data;
+					var weatherDetail=json.results[0].index;
+					var oDiv=document.createElement('div');
+					oCur.appendChild(oDiv);
+					oDiv.innerHTML=' <h3>'+weatherData[0].date+'</h3>\
+						<div class="pic">\
+							<img src="'+weatherData[0].dayPictureUrl+'" alt=""/>\
+							<img src="'+weatherData[0].nightPictureUrl+'" alt=""/>\
+						</div>\
+						<p>'+weatherData[0].temperature+'</p>\
+						<p>'+weatherData[0].weather+'</p>\
+						<p>'+weatherData[0].wind+'</p>';	
+					var oDetail=document.createElement('div');
+					oDetail.className='detail';
+					oCur.appendChild(oDetail);	
+					oDetail.innerHTML='';
+					for(var i=0;i<weatherDetail.length;i++){
+						oDetail.innerHTML+=' <p>'+weatherDetail[i].tipt+':</p><span>'+weatherDetail[i].des+'</span>';
+					}
+					//后三天
+					for(var i=1;i<weatherData.length;i++){
+						console.log(weatherData[i])
+						var oLi=document.createElement('li');					
+						oLi.innerHTML=' <h3>'+weatherData[i].date+'</h3>\
+							<div class="pic">\
+								<img src="'+weatherData[i].dayPictureUrl+'" alt=""/>\
+								<img src="'+weatherData[i].nightPictureUrl+'" alt=""/>\
+							</div>\
+							<p>'+weatherData[i].temperature+'</p>\
+							<p>'+weatherData[i].weather+'</p>\
+							<p>'+weatherData[i].wind+'</p>';
+							oLater.appendChild(oLi);
+					}					
+				}
+			}
+		});
+	}
+};
+</script>
+</head>
+<body>
+<div class=" weather">
+	<div class="left">
+    	<div class="city">
+            <span>上海区域:</span>
+            <select id="slt">
+                <option>徐汇</option>
+                <option>普陀</option>
+                <option>长宁</option>
+                <option>杨浦</option>
+                <option>松江</option>
+                <option>闵行</option>
+                <option>黄埔</option>
+                <option>静安</option>
+                <option>闸北</option>
+                <option>虹口</option>
+                <option>嘉定</option>
+                <option>青浦</option>
+            </select>
+        </div>
+        <div id="current">
+        	<!--<div>
+                <h3>周一04月04日(实时：14℃)</h3>
+                <div class="pic">
+                    <img src="http://api.map.baidu.com/images/weather/day/duoyun.png" alt=""/>
+                    <img src="http://api.map.baidu.com/images/weather/night/duoyun.png" alt=""/>
+                </div>
+                <p>18 ~ 11℃</p>
+                <p>多云</p>
+                <p>北风微风</p>
+            </div>-->
+            <!--<div class="detail">
+                <p>洗车指数:</p>
+                <span>较适宜洗车，未来一天无雨，风力较小，擦洗一新的汽车至少能保持一天。</span>
+                <p>洗车指数:</p>
+                <span>较适宜洗车，未来一天无雨，风力较小，擦洗一新的汽车至少能保持一天。</span>
+                <p>洗车指数:</p>
+                <span>较适宜洗车，未来一天无雨，风力较小，擦洗一新的汽车至少能保持一天。</span>
+                <p>洗车指数:</p>
+                <span>较适宜洗车，未来一天无雨，风力较小，擦洗一新的汽车至少能保持一天。</span>
+                <p>洗车指数:</p>
+                <span>较适宜洗车，未来一天无雨，风力较小，擦洗一新的汽车至少能保持一天。</span>
+                <p>洗车指数:</p>
+                <span>较适宜洗车，未来一天无雨，风力较小，擦洗一新的汽车至少能保持一天。</span>
+            </div>-->
+        </div>
+    </div>
+	<ul id="later">
+<!--    	<li>
+        	<h3>周一04月04日(实时：14℃)</h3>
+            <div class="pic">
+                <img src="http://api.map.baidu.com/images/weather/day/duoyun.png" alt=""/>
+                <img src="http://api.map.baidu.com/images/weather/night/duoyun.png" alt=""/>
+            </div>
+            <p>18 ~ 11℃</p>
+            <p>多云</p>
+            <p>北风微风</p>
+        </li>-->
+    </ul>
+</div>
+</body>
+</html>
